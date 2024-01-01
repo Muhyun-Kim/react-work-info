@@ -6,6 +6,7 @@ import { auth } from "../firebase";
 
 export const Login = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
@@ -23,8 +24,8 @@ export const Login = () => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("submit");
     try {
+      setIsLoading(true);
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/");
     } catch (e) {
@@ -32,6 +33,7 @@ export const Login = () => {
         setErr(e.message);
       }
     } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -63,10 +65,11 @@ export const Login = () => {
             />
             <input
               type="submit"
-              value="ログイン"
+              value={isLoading ? "Loading..." : "ログイン"}
               className="px-1 py-2 border-none text-base text-white bg-blue-500 rounded-xl cursor-pointer hover:opacity-80"
             />
           </form>
+          {err !== "" ? <span className="text-red-500 font-bold">{err}</span> : null}
         </div>
       </div>
     </>
