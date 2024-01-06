@@ -26,7 +26,7 @@ export const WorkInput = () => {
       if (file) {
         const locationRef = ref(
           storage,
-          `works/${user.uid}-${user.displayName}`
+          `works/${user.uid}-${user.displayName}/${doc.id}`
         );
         const result = await uploadBytes(locationRef, file);
         const url = await getDownloadURL(result.ref);
