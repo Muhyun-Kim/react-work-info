@@ -1,6 +1,6 @@
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
 import { WorkModel } from "../model/Work";
 
 export const WorkJson = () => {
@@ -8,6 +8,7 @@ export const WorkJson = () => {
   const fetchWorks = async () => {
     const worksQuery = query(
       collection(db, "works"),
+      where("userId", "==", auth.currentUser!.uid),
       orderBy("workNum", "asc")
     );
     const snapshot = await getDocs(worksQuery);
@@ -32,9 +33,9 @@ export const WorkJson = () => {
   }, []);
   const downLoadJson = (works: any) => {
     const jsonString = JSON.stringify(works, null, 2);
-    
+
     const blob = new Blob([jsonString], { type: "application/json" });
-    
+
     const url = URL.createObjectURL(blob);
 
     const link = document.createElement("a");
